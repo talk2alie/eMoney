@@ -13,10 +13,10 @@ namespace eMoneyMartiniGlassPrinter
         {
             var w = new Stopwatch();
             w.Start();
-            PrintGlassRecursive(70);
+            PrintGlassRecursive(5);
             w.Stop();
             Console.WriteLine(w.ElapsedMilliseconds + " milliseconds");
-                      
+
             Console.Read();
         }
 
@@ -27,30 +27,30 @@ namespace eMoneyMartiniGlassPrinter
             characterCount = width = handleHeight + (handleHeight - 1);
             var output = new StringBuilder();
 
-            PrintGlassRecursive(characterCount, width, handleHeight, new string('0', characterCount), output);
+            PrintGlassRecursive(characterCount, width, handleHeight, output);
         }
 
 
-        static void PrintGlassRecursive(int characterCount, int width, int handleHeight, string input, StringBuilder output)
+        static void PrintGlassRecursive(int characterCount, int width, int handleHeight, StringBuilder output)
         {
             if (characterCount <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(characterCount), "size must be greater than 0");
             }
 
-            if (String.IsNullOrEmpty(input.ToString()))
-            {
-                throw new ArgumentOutOfRangeException(nameof(input), "input must have content");
-            }
+            //if (String.IsNullOrEmpty(input.ToString()))
+            //{
+            //    throw new ArgumentOutOfRangeException(nameof(input), "input must have content");
+            //}
 
             if (characterCount > width)
             {
-                throw new ArgumentException("characters cannot exceed the width of the glass", nameof(input));
+                throw new ArgumentException("characters cannot exceed the width of the glass", nameof(characterCount));
             }
 
             const int STEP = 2;
             int leftPadding = characterCount + (width - characterCount) / STEP;
-            output.AppendLine(input.PadLeft(leftPadding).PadRight(width));
+            output.AppendLine(new string('0', characterCount).PadLeft(leftPadding).PadRight(width));
             if (characterCount == 1)
             {
                 Console.Write(output.ToString());
@@ -64,7 +64,7 @@ namespace eMoneyMartiniGlassPrinter
                 return;
             }
             characterCount -= STEP;
-            PrintGlassRecursive(characterCount, width, handleHeight, new string('0', characterCount), output);
+            PrintGlassRecursive(characterCount, width, handleHeight, output);
         }
 
 
@@ -78,14 +78,14 @@ namespace eMoneyMartiniGlassPrinter
             int leftPadding;
             while (characterCount >= 1)
             {
-                leftPadding = GetLeftPadding(characterCount, width, STEP);
+                leftPadding = characterCount + (width - characterCount) / STEP;
                 Console.WriteLine(new string('0', characterCount).PadLeft(leftPadding).PadRight(width));
                 characterCount -= STEP;
             }
 
             int iteration = 0;
             characterCount = 1;
-            leftPadding = GetLeftPadding(characterCount, width, STEP);
+            leftPadding = characterCount + (width - characterCount) / STEP;
             while (iteration < size)
             {
                 Console.WriteLine("|".PadLeft(leftPadding).PadRight(width));
